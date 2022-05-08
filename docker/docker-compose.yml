@@ -12,3 +12,23 @@ services:
     volumes:
       - ./app:/go/src/litestream-sample
       - ./cache/go_mod:/go/cache/go_mod
+      - ./datafiles:/var/datafiles
+    environment:
+      DATAFILES_DIR: /var/datafiles
+  litestream:
+    image: litestream/litestream
+    container_name: litestream
+    volumes:
+      - ./datafiles:/var/datafiles
+      - ./litestream/litestream.yml:/etc/litestream.yml
+    command: ['replicate']
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ACCESS_KEY: accesskey
+      MINIO_SECRET_KEY: secretkey
+    command: ['server', '/data', '--address', ':9000', '--console-address', ':9001']

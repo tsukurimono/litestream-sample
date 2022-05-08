@@ -1,0 +1,11 @@
+dbs:
+  - path: /var/datafiles/db
+    replicas:
+      - type: s3
+        bucket: mybkt
+        path: db
+        region: us-east-1
+        access-key-id: accesskey
+        secret-access-key: secretkey
+        endpoint: http://minio:9000
+
