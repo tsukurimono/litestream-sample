@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      target: dev
+    image: litestream-sample-app
+    container_name: litestream-sample-app
+    tty: true
+    volumes:
+      - ./app:/go/src/litestream-sample
+      - ./cache/go_mod:/go/cache/go_mod
