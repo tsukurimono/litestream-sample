@@ -2,7 +2,8 @@ package sqlite3
 
 import (
 	"database/sql"
-    _ "github.com/mattn/go-sqlite3"
+
+	_ "github.com/mattn/go-sqlite3"
 
 	"litestream-sample-app/database"
 )
@@ -28,7 +29,7 @@ func (db *SQLite3) Query(statement string, args ...interface{}) (database.Row, e
 }
 
 func (db *SQLite3) Close() error {
-	db.Close()
+	db.conn.Close()
 	return nil
 }
 

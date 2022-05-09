@@ -1,9 +1,9 @@
 package database
 
 import (
+	"bytes"
 	"io/ioutil"
 	"strings"
-	"bytes"
 )
 
 type Database interface {
