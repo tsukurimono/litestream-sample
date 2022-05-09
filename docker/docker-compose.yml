@@ -33,3 +33,14 @@ services:
       MINIO_ACCESS_KEY: accesskey
       MINIO_SECRET_KEY: secretkey
     command: ['server', '/data', '--address', ':9000', '--console-address', ':9001']
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 accesskey secretkey;
+      /usr/bin/mc mb myminio/mybkt;
+      /usr/bin/mc policy set public myminio/mybkt;
+      exit 0;
+      "
