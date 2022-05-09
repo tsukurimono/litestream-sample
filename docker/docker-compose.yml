@@ -13,6 +13,7 @@ services:
       - ./app:/go/src/litestream-sample
       - ./cache/go_mod:/go/cache/go_mod
       - ./datafiles:/var/datafiles
+      - ./sqlite3/init/create_tables.sql:/init/init.sql
     environment:
       DATAFILES_DIR: /var/datafiles
   litestream:

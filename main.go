@@ -2,73 +2,74 @@ package main
 
 import (
     "fmt"
-    "time"
 
+    "litestream-sample-app/database"
     "litestream-sample-app/database/sqlite3"
 )
 
 func main() {
-    db, err := sqlite3.New()
-    if err != nil {
+  db, err := sqlite3.New(&sqlite3.Config{DatabasePath: "/var/datafiles/db"})
+  if err != nil {
 		panic(err)
 	}
 
-	result, err := db.Exec("INSERT INTO userinfo(username, departname, created) values(?,?,?)", "astaxie", "研究開発部門", "2012-12-09")
-    if err != nil {
+  err = database.Initialize(db, "/init/init.sql")
+  if err != nil {
+    panic(err)
+  }
+
+	result, err := db.Exec("INSERT INTO fruits (name, color) VALUES (?, ?);", "apple", "red")
+  if err != nil {
 		panic(err)
 	}
 
-    id, err := result.LastInsertId()
-    if err != nil {
+  id, err := result.LastInsertId()
+  if err != nil {
 		panic(err)
 	}
 
-    fmt.Println(id)
+  fmt.Println(id)
 
-    result, err = db.Exec("update userinfo set username=? where uid=?", "astaxieupdate", id)
-    if err != nil {
+  result, err = db.Exec("update fruits set color=? where name=?", "blue", "apple")
+  if err != nil {
 		panic(err)
 	}
 
-    affect, err := result.RowsAffected()
-    if err != nil {
+  affect, err := result.RowsAffected()
+  if err != nil {
 		panic(err)
 	}
 
-    fmt.Println(affect)
+  fmt.Println(affect)
 
-    rows, err := db.Query("SELECT * FROM userinfo")
-    if err != nil {
+  rows, err := db.Query("SELECT * FROM fruits")
+  if err != nil {
 		panic(err)
 	}
 
-    for rows.Next() {
-        var uid int
-        var username string
-        var department string
-        var created time.Time
-        err = rows.Scan(&uid, &username, &department, &created)
-        if err != nil {
-		    panic(err)
-	    }
-
-        fmt.Println(uid)
-        fmt.Println(username)
-        fmt.Println(department)
-        fmt.Println(created)
-    }
-
-    result, err = db.Exec("delete from userinfo where uid=?", id)
+  for rows.Next() {
+    var name string
+    var color string
+    err = rows.Scan(&name, &color)
     if err != nil {
+		  panic(err)
+	  }
+
+    fmt.Println(name)
+    fmt.Println(color)
+  }
+
+  result, err = db.Exec("delete from fruits where name=?", "apple")
+  if err != nil {
 		panic(err)
 	}
 
-    affect, err = result.RowsAffected()
-    if err != nil {
+  affect, err = result.RowsAffected()
+  if err != nil {
 		panic(err)
 	}
 
-    fmt.Println(affect)
+  fmt.Println(affect)
 
-    //db.Close()
+  //db.Close() // TODO: Close after litestream flush wal.
 }

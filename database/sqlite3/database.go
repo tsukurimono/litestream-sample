@@ -60,8 +60,8 @@ func (r *SQLite3Row) Close() error {
 	return r.rows.Close()
 }
 
-func New() (database.Database, error) {
-	conn, err := sql.Open("sqlite3", "/var/datafiles/db")
+func New(config *Config) (database.Database, error) {
+	conn, err := sql.Open("sqlite3", config.DatabasePath)
 	if err != nil {
 		return &SQLite3{}, err
 	}
